@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Apply Leave</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="assets/img/favicon.png">
+</head>
+
+<body class="bg-gray-100 text-gray-900">
+
+  <div class="flex justify-center items-center min-h-screen px-4 sm:px-6 lg:px-8 mt-12">
+    <!-- Card -->
+    <div class="w-full max-w-lg bg-white shadow-lg rounded-lg p-6 space-y-4">
+      
+      <!-- Header -->
+      <div class="text-center">
+        <h1 class="text-3xl text-blue-600 font-semibold">Apply / Mark Leave</h1>
+        <p class="text-gray-600 mt-2">
+          Been on full throttle? Take a well‑timed break and come back recharged. 🌿
+        </p>
+      </div>
+
+      <!-- Form -->
+      <form id="leaveForm" method="post" action="/api/leaves" class="space-y-4">
+        <!-- Start Date -->
+        <div>
+          <label for="startDate" class="block text-sm font-medium text-gray-700">Leave Start Date</label>
+          <input
+            type="date"
+            id="startDate"
+            name="startDate"
+            required
+            class="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <div id="startDateError" class="text-red-500 text-sm mt-1"></div>
+        </div>
+
+        <!-- End Date -->
+        <div>
+          <label for="endDate" class="block text-sm font-medium text-gray-700">Leave End Date</label>
+          <input
+            type="date"
+            id="endDate"
+            name="endDate"
+            required
+            class="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <div id="endDateError" class="text-red-500 text-sm mt-1"></div>
+        </div>
+
+        <!-- Total Days (calculated, inclusive) -->
+        <div>
+          <label for="totalDays" class="block text-sm font-medium text-gray-700">Total Leave Days (inclusive)</label>
+          <input
+            type="text"
+            id="totalDays"
+            name="totalDays"
+            readonly
+            class="mt-2 block w-full p-3 bg-gray-100 border border-gray-300 rounded-md shadow-sm"
+            placeholder="—"
+          />
+        </div>
+
+        <!-- Submit -->
+        <div>
+          <button
+            type="submit"
+            class="w-full py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
+          >
+            Apply Leave
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const startEl = document.getElementById('startDate');
+      const endEl   = document.getElementById('endDate');
+      const daysEl  = document.getElementById('totalDays');
+
+      const startErr = document.getElementById('startDateError');
+      const endErr   = document.getElementById('endDateError');
+
+      // Helper: format YYYY-MM-DD
+      const fmt = (d) => {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${dd}`;
+      };
+
+      // --- Window: Next two months ---
+      // Example: Today Mar 5 -> window = Apr 1 to May 31
+      const today = new Date();
+      const firstOfNext = new Date(today.getFullYear(), today.getMonth() + 1, 1);      // next month start
+      const firstOfMonthAfterNext = new Date(today.getFullYear(), today.getMonth() + 2, 1);
+      const firstOfFollowingAfter = new Date(today.getFullYear(), today.getMonth() + 3, 1);
+      const lastOfMonthAfterNext  = new Date(firstOfFollowingAfter - 1);               // end of month after next
+
+      const minStart = fmt(firstOfNext);
+      const maxEnd   = fmt(lastOfMonthAfterNext);
+
+      // Apply bounds
+      startEl.min = minStart;
+      startEl.max = maxEnd;       // start can be anywhere within the two-month window
+      endEl.min   = minStart;
+      endEl.max   = maxEnd;
+
+      // Calculate inclusive day count (simple calendar days)
+      function calcDays() {
+        daysEl.value = '';
+
+        if (!startEl.value || !endEl.value) return;
+
+        const s = new Date(startEl.value + 'T00:00:00');
+        const e = new Date(endEl.value   + 'T00:00:00');
+
+        if (e < s) {
+          endErr.textContent = 'End date cannot be before start date.';
+          return;
+        } else {
+          endErr.textContent = '';
+        }
+
+        const diffDays = Math.floor((e - s) / (1000 * 60 * 60 * 24)) + 1; // inclusive
+        daysEl.value = `${diffDays} day(s)`;
+      }
+
+      // When start changes: update constraints & recalc
+      startEl.addEventListener('change', () => {
+        startErr.textContent = '';
+
+        if (!startEl.value) return;
+
+        if (startEl.value < minStart || startEl.value > maxEnd) {
+          startErr.textContent = `Please choose a start date between ${minStart} and ${maxEnd}.`;
+          startEl.value = '';
+          return;
+        }
+
+        // End must be >= start, but still within the two-month window
+        endEl.min = startEl.value;
+        if (endEl.value && endEl.value < startEl.value) {
+          endEl.value = startEl.value;
+        }
+        calcDays();
+      });
+
+      endEl.addEventListener('change', () => {
+        if (!endEl.value) return;
+
+        if (startEl.value && endEl.value < startEl.value) {
+          endErr.textContent = 'End date cannot be before start date.';
+          return;
+        }
+        if (endEl.value > maxEnd) {
+          endErr.textContent = `Please choose an end date not after ${maxEnd}.`;
+          endEl.value = maxEnd;
+        } else {
+          endErr.textContent = '';
+        }
+        calcDays();
+      });
+
+      // Validate on submit
+      const form = document.getElementById('leaveForm');
+      form.addEventListener('submit', (e) => {
+        startErr.textContent = '';
+        endErr.textContent = '';
+
+        if (!startEl.value) {
+          e.preventDefault();
+          startErr.textContent = 'Please select a start date.';
+          return;
+        }
+        if (!endEl.value) {
+          e.preventDefault();
+          endErr.textContent = 'Please select an end date.';
+          return;
+        }
+
+        if (startEl.value < minStart || startEl.value > maxEnd) {
+          e.preventDefault();
+          startErr.textContent = `Start date must be between ${minStart} and ${maxEnd}.`;
+          return;
+        }
+        if (endEl.value < startEl.value) {
+          e.preventDefault();
+          endErr.textContent = 'End date cannot be before start date.';
+          return;
+        }
+        if (endEl.value > maxEnd) {
+          e.preventDefault();
+          endErr.textContent = `End date must not be after ${maxEnd}.`;
+          return;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
