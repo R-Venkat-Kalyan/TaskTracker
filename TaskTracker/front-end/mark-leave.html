@@ -51,6 +51,22 @@
           <div id="endDateError" class="text-red-500 text-sm mt-1"></div>
         </div>
 
+        <div>
+          <label for="leaveType" class="block text-sm font-medium text-gray-700">Leave Type</label>
+          <select
+            id="leaveType"
+            name="leaveType"
+            required
+            class="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">Select Leave Type</option>
+            <option value="sick">Sick Leave</option>
+            <option value="planned">Planned Leave</option>
+            <option value="emergency">Emergency Leave</option>
+          </select>
+          <div id="leaveTypeError" class="text-red-500 text-sm mt-1"></div>
+        </div>
+
         <!-- Total Days (calculated, inclusive) -->
         <div>
           <label for="totalDays" class="block text-sm font-medium text-gray-700">Total Leave Days (inclusive)</label>

@@ -1,102 +1,141 @@
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
- 
-  <title>Daily Tracker — Employee</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="assets/img/favicon.png" rel="icon">
-    <style>
-        .sidebar a {
-            color: inherit !important;
-            text-decoration: none !important;
-        }
-    </style>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
+  <!-- Font Awesome (icons) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+
+  <!-- Google Font for brand -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet"/>
+
+  <!-- Favicon -->
+  <link href="assets/img/favicon.png" rel="icon"/>
+
+  <!-- Success Message -->
+  <th:block th:if="${successMessage}">
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+      window.onload = function () {
+        alert(/*[[${successMessage}]]*/ '');
+      };
+      /*]]>*/
+    </script>
+  </th:block>
+
+  <style>
+    .brand-text {
+      font-family: 'Poppins', sans-serif;
+      color: #88f572; /* brand green */
+      letter-spacing: .5px;
+    }
+  </style>
 </head>
 
-<body class="flex flex-col w-screen h-screen bg-white-300">
+<body class="flex flex-col w-screen h-screen bg-white">
 
-    <!-- Navbar -->
-    <nav
-        class="bg-gray-900 dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
-        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-            <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
-                <img src="/logo.jpg" class="h-10 object-cover" alt="Logo">
-            </a>
-            <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+  <!-- Navbar -->
+  <nav class="bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-700">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+
+      <!-- Styled TaskTracker brand (replaces logo image) -->
+      <a href="/" class="flex items-center space-x-2 text-white no-underline">
+        <h1 class="text-2xl brand-text">TaskTracker</h1>
+        <span class="sr-only">Home</span>
+      </a>
+
+      <div class="flex md:order-2">
+        <form th:action="@{/api/auth/logout}" method="post">
+          <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
                 <button type="button"
                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Logout</button>
             </div>
-        </div>
-    </nav>
-
-    <!-- Container for Sidebar and Main Content -->
-    <div class="flex flex-row h-full mt-16">
-        <!-- Sidebar -->
-        <aside class="fixed top-16 w-48 bg-gray-900 text-gray-400 h-full flex flex-col justify-between">
-            <!-- Links Section -->
-           <div class="flex flex-col items-center w-full px-2">
-
-    <!-- Dashboard -->
-    <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
-       href="/employee/dashboard">
-        <i class="fa-solid fa-chart-line w-6 h-6"></i>
-        <span class="ml-2 text-sm font-medium">Dashboard</span>
-    </a>
-
-    <!-- Milestone Tracker -->
-    <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
-       href="/employee/milestones">
-        <i class="fa-solid fa-flag-checkered w-6 h-6"></i>
-        <span class="ml-2 text-sm font-medium">Milestone Tracker</span>
-    </a>
-
-    <!-- Holiday Tracker -->
-    <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
-       href="/employee/holidays">
-        <i class="fa-solid fa-calendar-days w-6 h-6"></i>
-        <span class="ml-2 text-sm font-medium">Holiday Tracker</span>
-    </a>
-
-    <!-- Add Milestone Data -->
-    <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
-       href="/employee/add-milestone">
-        <i class="fa-solid fa-plus w-6 h-6"></i>
-        <span class="ml-2 text-sm font-medium">Add Milestone Data</span>
-    </a>
-
-    <!-- Apply / Mark Leave -->
-    <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
-       href="/employee/apply-leave">
-        <i class="fa-solid fa-plane-departure w-6 h-6"></i>
-        <span class="ml-2 text-sm font-medium">Apply / Mark Leave</span>
-    </a>
-
-</div>
-            <!-- Feedback Link -->
-            <div class="flex items-center justify-center w-full px-2 mb-16">
-                <a class="flex items-center w-full h-12 px-3 rounded-lg bg-gradient-to-r from-blue-500 to-green-500 text-white font-bold shadow-md hover:shadow-xl transition-transform transform hover:scale-105"
-                    href="/feedback">
-                    <i class="fa-solid fa-comment w-6 h-6"></i>
-                    <span class="ml-2 text-sm font-medium">Feedback</span>
-                    <span
-                        class="absolute top-0 right-0 mt-1 mr-1 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-bounce">New!</span>
-                </a>
-            </div>
-        </aside>
-
-
-        <!-- Main Content -->
-        <main class="flex-grow ml-48 p-4 bg-white">
-            <div th:replace="${mainContent}"></div>
-        </main>
+          <!-- Optional CSRF for Spring Security -->
+          <input type="hidden" name="_csrf" th:value="${_csrf.token}" th:if="${_csrf}"/>
+        </form>
+      </div>
     </div>
+  </nav>
+
+  <!-- Container for Sidebar and Main Content -->
+  <div class="flex flex-row mt-16 h-full">
+
+    <!-- Sidebar -->
+    <aside class="flex flex-col w-48 bg-gray-900 text-gray-400 h-full">
+      <div class="w-full px-2">
+        <div class="flex flex-col items-center w-full mt-3">
+
+          <!-- Dashboard -->
+          <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+             href="/employee/dashboard">
+            <i class="fa-solid fa-chart-line w-6 h-6"></i>
+            <span class="ml-2 text-sm font-medium">Dashboard</span>
+          </a>
+
+          <!-- Milestone Tracker -->
+          <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+             href="/employee/milestones">
+            <i class="fa-solid fa-flag-checkered w-6 h-6"></i>
+            <span class="ml-2 text-sm font-medium">Milestone Tracker</span>
+          </a>
+
+          <!-- Holiday Tracker -->
+          <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+             href="/employee/holidays">
+            <i class="fa-solid fa-calendar-days w-6 h-6"></i>
+            <span class="ml-2 text-sm font-medium">Holiday Tracker</span>
+          </a>
+
+          <!-- Add Milestone Data -->
+          <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+             href="/employee/add-milestone">
+            <i class="fa-solid fa-plus w-6 h-6"></i>
+            <span class="ml-2 text-sm font-medium">Add Milestone Data</span>
+          </a>
+
+          <!-- Apply / Mark Leave -->
+          <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+             href="/employee/apply-leave">
+            <i class="fa-solid fa-plane-departure w-6 h-6"></i>
+            <span class="ml-2 text-sm font-medium">Apply / Mark Leave</span>
+          </a>
+
+          <!-- Fixed Feedback Button -->
+          <div class="fixed bottom-4 left-2 w-44 z-30 pointer-events-auto">
+            <a class="relative flex items-center w-full h-12 px-3 rounded-lg bg-gradient-to-r from-blue-500 to-green-500
+                      text-white font-bold shadow-md hover:shadow-xl transition-transform transform hover:scale-105"
+               href="/feedback">
+              <i class="fa-solid fa-comment w-6 h-6"></i>
+              <span class="ml-2 text-sm font-medium">Feedback</span>
+              <span class="absolute top-0 right-0 mt-1 mr-1 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-bounce">
+                New!
+              </span>
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </aside>
+
+   
+  </div>
+
+  <!-- Tiny JS fallback (only sets month if somehow still empty) -->
+  <script>
+    (function () {
+      const el = document.getElementById('monthPicker');
+      if (el && !el.value) {
+        el.value = new Date().toISOString().slice(0, 7); // YYYY-MM
+      }
+    })();
+  </script>
 
 </body>
-
 </html>
