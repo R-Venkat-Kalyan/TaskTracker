@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Employee</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="assets/img/favicon.png" rel="icon">
+
+    <script>
+        function validateForm(event) {
+            event.preventDefault();
+
+            // Clear existing errors
+            document.querySelectorAll('.error').forEach(el => el.innerText = '');
+
+            // Gather values
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const empId = document.getElementById('empId').value.trim();
+            const org = document.getElementById('organisation').value.trim();
+            const project = document.getElementById('project').value.trim();
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+
+            let isValid = true;
+
+            if (!fullName) { document.getElementById('nameError').innerText = 'Full Name is required.'; isValid = false; }
+            if (!email)    { document.getElementById('emailError').innerText = 'Email is required.'; isValid = false; }
+            if (!empId)    { document.getElementById('idError').innerText = 'Employee ID is required.'; isValid = false; }
+            if (!org)      { document.getElementById('orgError').innerText = 'Organisation is required.'; isValid = false; }
+            if (!project)  { document.getElementById('projectError').innerText = 'Project is required.'; isValid = false; }
+            if (!password) { document.getElementById('passwordError').innerText = 'Password is required.'; isValid = false; }
+            if (!role)     { document.getElementById('roleError').innerText = 'Role is required.'; isValid = false; }
+
+            if (isValid) {
+                document.getElementById('addEmployeeForm').submit();
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-gray-100 text-gray-900">
+
+    <div class="flex justify-center items-center min-h-screen px-4 sm:px-6 lg:px-8">
+        <!-- Card Container -->
+        <div class="w-full max-w-lg bg-white shadow-lg rounded-lg p-6 space-y-4">
+
+            <!-- Header -->
+            <div class="text-center">
+                <h1 class="text-3xl text-blue-600 font-semibold">Add New Employee</h1>
+                <p class="text-gray-600 mt-2">Fill the details below to register a new employee.</p>
+            </div>
+
+            <!-- Form -->
+            <form id="addEmployeeForm" method="post" action="/manager/add-employee" class="space-y-4">
+
+                <!-- Full Name -->
+                <div>
+                    <label for="fullName" class="block text-sm font-medium text-gray-700">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" placeholder="Full Name"
+                        class="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div id="nameError" class="error text-red-500 text-sm mt-1"></div>
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Email"
+                        class="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div id="emailError" class="error text-red-500 text-sm mt-1"></div>
+                </div>
+
+                <!-- ID -->
+                <div>
+                    <label for="empId" class="block text-sm font-medium text-gray-700">ID</label>
+                    <input type="text" id="empId" name="empId" placeholder="Employee ID"
+                        class="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div id="idError" class="error text-red-500 text-sm mt-1"></div>
+                </div>
+
+                <!-- Organisation -->
+                <div>
+                    <label for="organisation" class="block text-sm font-medium text-gray-700">Organisation</label>
+                    <input type="text" id="organisation" name="organisation" placeholder="Organisation"
+                        class="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div id="orgError" class="error text-red-500 text-sm mt-1"></div>
+                </div>
+
+                <!-- Project -->
+                <div>
+                    <label for="project" class="block text-sm font-medium text-gray-700">Project</label>
+                    <input type="text" id="project" name="project" placeholder="Project"
+                        class="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div id="projectError" class="error text-red-500 text-sm mt-1"></div>
+                </div>
+
+                <!-- Role (developer/manager) -->
+                <div>
+                    <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+                    <select id="role" name="role"
+                        class="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Select role</option>
+                        <option value="employee">Regular Employee</option>
+                        <option value="manager">Manager</option>
+                    </select>
+                    <div id="roleError" class="error text-red-500 text-sm mt-1"></div>
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Password"
+                        class="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div id="passwordError" class="error text-red-500 text-sm mt-1"></div>
+                </div>
+
+                <!-- Submit -->
+                <div>
+                    <button type="submit" onclick="validateForm(event)"
+                        class="w-full py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">
+                        Add Employee
+                    </button>
+                </div>
+
+                <!-- CSRF (if using Spring Security + Thymeleaf) -->
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}" th:if="${_csrf}"/>
+            </form>
+
+        </div>
+    </div>
+
+</body>
+</html>
+``
