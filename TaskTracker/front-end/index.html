@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Task Tracker</title>
+
+  <!-- Tailwind (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Favicon (optional) -->
+  <link rel="icon" href="assets/img/favicon.png" />
+
+  <style>
+    :root { --brand-accent: #88f572; }
+    .brand-text { font-family: 'Poppins', sans-serif; color: var(--brand-accent); }
+    
+    /* “Cool” logout button hover */
+    .btn-logout {
+      background: linear-gradient(135deg, #111827, #1f2937);
+      border: 1px solid rgba(136,245,114,0.35);
+      color: #fff;
+      transition: all .2s ease;
+      box-shadow: 0 0 0 rgba(136,245,114,0);
+    }
+    .btn-logout:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(16,185,129,0.15);
+      border-color: rgba(136,245,114,0.6);
+    }
+    /* Footer (your requested style) */
+    .footer {
+      background-color: #110606;
+      color: rgba(255, 255, 255, 1);
+      letter-spacing: 2px;
+      font-weight: bold;
+      width: 100%;
+      z-index: 999;
+      padding: 10px;
+      text-align: center;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(74, 190, 113, 0.5);
+      margin: 0;
+    }
+    .footer-link { color: #88f572; text-decoration: none; }
+    .footer-link:hover { text-decoration: underline; }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col bg-gray-50 text-gray-800">
+
+  <!-- Top Navbar -->
+  <header class="border-b bg-[#0b0f14]">
+    <nav class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <!-- Logo (text only, no icon) -->
+      <a href="index.html" class="flex items-center space-x-2 text-white no-underline">
+        <h1 class="text-xl sm:text-2xl font-semibold brand-text">TaskTracker</h1><span class="text-white/90"></span>
+      </a>
+
+      <div class="flex items-center gap-3">
+        
+        <form th:action="@{/api/auth/logout}" method="post">
+          <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+                <button type="button"
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Login</button>
+            </div>
+          <!-- Optional CSRF for Spring Security -->
+          <!-- <input type="hidden" name="_csrf" th:value="${_csrf.token}" th:if="${_csrf}"/> -->
+        </form>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main -->
+  <main class="flex-1">
+    <!-- Hero -->
+    <section class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 pt-10">
+      <div class="text-center">
+        <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900">
+          Work flows that feel natural.
+        </h2>
+        <p class="mt-3 text-base sm:text-lg text-gray-600">
+          Add your daily work, review progress, plan leaves, and track them — in a simple sequence.
+        </p>
+      </div>
+    </section>
+
+    <!-- Flow: four steps (icons + labels) -->
+    <section class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12">
+      <div class="hidden lg:grid grid-cols-4 gap-8 items-start">
+        <!-- 1. Add Daily Data -->
+        <a href="/me/add-data" class="group rounded-xl bg-white border border-gray-200 p-6 shadow-sm hover:shadow-md transition no-underline">
+          <div class="flex items-center justify-center h-20 w-20 rounded-full bg-emerald-50 border border-emerald-100">
+            <!-- clipboard-check -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9 text-emerald-600" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 2h6a2 2 0 0 1 2 2h1a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1a2 2 0 0 1 2-2Zm3 4a1 1 0 1 0 0-2h-2a1 1 0 1 0 0 2h2Zm-1.2 9.8 4.5-4.5-1.6-1.6-3 3-1.4-1.4-1.6 1.6 3 3Z"/>
+            </svg>
+          </div>
+          <h3 class="mt-4 font-semibold text-gray-900">Add Daily Data</h3>
+          <p class="mt-1 text-sm text-gray-600">Log story points, hours, and updates.</p>
+        </a>
+
+        <!-- 2. View Tracker Data -->
+        <a href="/me/view-data" class="group rounded-xl bg-white border border-gray-200 p-6 shadow-sm hover:shadow-md transition no-underline">
+          <div class="flex items-center justify-center h-20 w-20 rounded-full bg-blue-50 border border-blue-100">
+            <!-- chart-bars -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M4 3h2v18H4V3Zm7 6h2v12h-2V9Zm7-4h2v16h-2V5Z"/>
+            </svg>
+          </div>
+          <h3 class="mt-4 font-semibold text-gray-900">View Tracker Data</h3>
+          <p class="mt-1 text-sm text-gray-600">See your logs, totals, and trends.</p>
+        </a>
+
+        <!-- 3. Add Leave -->
+        <a href="/me/apply-leave" class="group rounded-xl bg-white border border-gray-200 p-6 shadow-sm hover:shadow-md transition no-underline">
+          <div class="flex items-center justify-center h-20 w-20 rounded-full bg-indigo-50 border border-indigo-100">
+            <!-- calendar-plus -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9 text-indigo-600" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 2h2v2h6V2h2v2h2a2 2 0 0 1 2 2v3H3V6a2 2 0 0 1 2-2h2V2Zm16 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9h20ZM12 13h-3v2h3v3h2v-3h3v-2h-3v-3h-2v3Z"/>
+            </svg>
+          </div>
+          <h3 class="mt-4 font-semibold text-gray-900">Add Leave</h3>
+          <p class="mt-1 text-sm text-gray-600">Request your next break in advance.</p>
+        </a>
+
+        <!-- 4. View Leave Tracker -->
+        <a href="/me/holidays" class="group rounded-xl bg-white border border-gray-200 p-6 shadow-sm hover:shadow-md transition no-underline">
+          <div class="flex items-center justify-center h-20 w-20 rounded-full bg-rose-50 border border-rose-100">
+            <!-- calendar-list -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9 text-rose-600" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 2h2v2h6V2h2v2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2V2Zm14 8H3v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V10Zm-4 3H7v2h10v-2Zm0 3H7v2h10v-2Z"/>
+            </svg>
+          </div>
+          <h3 class="mt-4 font-semibold text-gray-900">View Leave Tracker</h3>
+          <p class="mt-1 text-sm text-gray-600">Review planned ranges & weekdays.</p>
+        </a>
+      </div>
+
+      <!-- Mobile / Tablet: stacked cards -->
+      <div class="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <a href="/me/add-data" class="rounded-xl bg-white border border-gray-200 p-5 shadow-sm hover:shadow-md transition no-underline">
+          <div class="flex items-center gap-4">
+            <div class="h-14 w-14 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-emerald-600" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9 2h6a2 2 0 0 1 2 2h1a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1a2 2 0 0 1 2-2Zm3 4a1 1 0 1 0 0-2h-2a1 1 0 1 0 0 2h2Zm-1.2 9.8 4.5-4.5-1.6-1.6-3 3-1.4-1.4-1.6 1.6 3 3Z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-900">Add Daily Data</h3>
+              <p class="text-sm text-gray-600">Log story points and hours.</p>
+            </div>
+          </div>
+        </a>
+
+        <a href="/me/view-data" class="rounded-xl bg-white border border-gray-200 p-5 shadow-sm hover:shadow-md transition no-underline">
+          <div class="flex items-center gap-4">
+            <div class="h-14 w-14 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 3h2v18H3V3Zm7 6h2v12h-2V9Zm7-4h2v16h-2V5Z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-900">View Tracker Data</h3>
+              <p class="text-sm text-gray-600">See logs & totals.</p>
+            </div>
+          </div>
+        </a>
+
+        <a href="/me/apply-leave" class="rounded-xl bg-white border border-gray-200 p-5 shadow-sm hover:shadow-md transition no-underline">
+          <div class="flex items-center gap-4">
+            <div class="h-14 w-14 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-indigo-600" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7 2h2v2h6V2h2v2h2a2 2 0 0 1 2 2v3H3V6a2 2 0 0 1 2-2h2V2Zm16 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9h20ZM12 13h-3v2h3v3h2v-3h3v-2h-3v-3h-2v3Z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-900">Add Leave</h3>
+              <p class="text-sm text-gray-600">Request your break.</p>
+            </div>
+          </div>
+        </a>
+
+        <a href="/me/holidays" class="rounded-xl bg-white border border-gray-200 p-5 shadow-sm hover:shadow-md transition no-underline">
+          <div class="flex items-center gap-4">
+            <div class="h-14 w-14 rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-rose-600" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7 2h2v2h6V2h2v2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2V2Zm14 8H3v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V10Zm-4 3H7v2h10v-2Zm0 3H7v2h10v-2Z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-900">View Leave Tracker</h3>
+              <p class="text-sm text-gray-600">Review your planned leaves.</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <h4>
+      &copy; Designed By
+      <a href="https://reddyvenkatkalyan.vercel.app/" target="_blank" rel="noopener noreferrer" class="footer-link">
+        Reddy Venkat Kalyan
+      </a>
+    </h4>
+    <h4>All Rights Reserved! <span id="year"></span></h4>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
