@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Daily Work Log — Entry Wizard</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+		body {
+			font-family: 'Roboto', sans-serif;
+		}
+
+		#progressbar li {
+			border: 2px solid transparent;
+			padding: 0.5rem 1rem;
+			border-radius: 5px;
+		}
+
+		#progressbar li.active {
+			border-color: #4c51bf;
+			color: #4c51bf;
+			font-weight: bold;
+		}
+	</style>
+</head>
+
+<body class="bg-white text-gray-800">
+	<div class="pt-20 max-w-3xl mx-auto p-6">
+		<!-- Action points to your Daily Log endpoint; change if your route differs -->
+		<form id="msform" class="space-y-8" method="post" action="/api/daily-logs" autocomplete="on">
+			<!-- Progressbar (kept same layout/classes) -->
+			<ul id="progressbar" class="flex justify-between space-x-4 mb-6">
+				<li class="w-1/4 text-center py-2 active">Work Basics</li>
+				<li class="w-1/4 text-center py-2">Jira &amp; Classification</li>
+				<li class="w-1/4 text-center py-2">Estimates &amp; Status</li>
+			</ul>
+
+			<!-- Fieldset 1: Work Basics (kept blue style) -->
+			<fieldset class="bg-blue-50 p-6 rounded-lg shadow-lg space-y-4">
+				<h2 class="text-xl font-bold text-blue-800">Work Basics</h2>
+
+				<div>
+					<label for="sprint" class="block font-medium">Sprint</label>
+					<input type="text" name="sprint" id="sprint" placeholder="Sprint name/number" required
+						autocomplete="on"
+						class="w-full px-3 py-2 border border-gray-300 rounded focus:ring focus:ring-blue-300" />
+				</div>
+
+				<div>
+					<label for="release" class="block font-medium">Release</label>
+					<input type="text" name="release" id="release" placeholder="Release name/number" required
+						autocomplete="on"
+						class="w-full px-3 py-2 border border-gray-300 rounded focus:ring focus:ring-blue-300" />
+				</div>
+
+				<div>
+					<label for="date" class="block font-medium">Date</label>
+					<input type="date" name="date" id="date" required
+						class="w-full px-3 py-2 border border-gray-300 rounded focus:ring focus:ring-blue-300" />
+				</div>
+
+				<div>
+					<label for="program" class="block font-medium">Program</label>
+					<input type="text" name="program" id="program" placeholder="Program/initiative" required
+						autocomplete="on"
+						class="w-full px-3 py-2 border border-gray-300 rounded focus:ring focus:ring-blue-300" />
+				</div>
+
+				<div class="flex justify-end">
+					<button type="button"
+						class="next bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Next</button>
+				</div>
+			</fieldset>
+
+			<!-- Fieldset 2: Jira & Classification (kept green style) -->
+			<fieldset class="hidden bg-green-50 p-6 rounded-lg shadow-lg space-y-4">
+				<h2 class="text-xl font-bold text-green-800">Jira &amp; Classification</h2>
+
+				<div>
+					<label for="jiraType" class="block font-medium">Jira Type</label>
+					<select name="jiraType" id="jiraType" required
+						class="w-full px-3 py-2 border border-gray-300 rounded focus:ring focus:ring-green-300">
+						<option value="">Select type</option>
+						<option>User Story</option>
+						<option>Defect</option>
+						<option>Adhoc Task</option>
+						<option>Spike Story</option>
+						<option>Tech Enabler</option>
+						<option>Design Review</option>
+						<option>Others</option>
+					</select>
+				</div>
+
+				<div>
+					<label for="priority" class="block font-medium">Priority</label>
+					<select name="priority" id="priority" required
+						class="w-full px-3 py-2 border border-gray-300 rounded focus:ring focus:ring-green-300">
+						<option value="">Select priority</option>
+						<option>Low</option>
+						<option>Moderate</option>
+						<option>High</option>
+						<option>Critical</option>
+						<option>Blocker</option>
+					</select>
+				</div>
+
+				<div>
+					<label for="userStoryId" class="block font-medium">User Story ID</label>
+					<input type="text" name="userStoryId" id="userStoryId" placeholder="e.g., US-12345" required
+						autocomplete="on"
+						class="w-full px-3 py-2 border border-gray-300 rounded focus:ring focus:ring-green-300" />
+				</div>
+
+				<div>
+					<label for="jiraId" class="block font-medium">Jira ID</label>
+					<input type="text" name="jiraId" id="jiraId" placeholder="e.g., JIRA-67890" required autocomplete="on"
+						class="w-full px-3 py-2 border border-gray-300 rounded focus:ring focus:ring-green-300" />
+				</div>
+
+				<div>
+					<label for="productionDefect" class="block font-medium">Production Defect</label>
+					<select name="productionDefect" id="productionDefect" required
+						class="w-full px-3 py-2 border border-gray-300 rounded focus:ring focus:ring-green-300">
+						<option value="">Select</option>
+						<option value="true">Yes</option>
+						<option value="false">No</option>
+					</select>
+				</div>
+
+				<div>
+					<label for="effortCategory" class="block font-medium">Effort Category</label>
+					<select name="effortCategory" id="effortCategory" required
+						class="w-full px-3 py-2 border border-gray-300 rounded focus:ring focus:ring-green-300">
+						<option value="">Select category</option>
+						<option>Analysis</option>
+						<option>Development</option>
+						<option>Discussion</option>
+						<option>Analysis &amp; Grooming</option>
+						<option>Analysis &amp; support</option>
+						<option>Support</option>
+						<option>Testing</option>
+						<option>Grooming</option>
+						<option>Others</option>
+					</select>
+				</div>
+
+				<div>
+					<label for="description" class="block font-medium">Description</label>
+					<textarea name="description" id="description" rows="3" placeholder="Describe the work done" required
+						class="w-full px-3 py-2 border border-gray-300 rounded focus:ring focus:ring-green-300"></textarea>
+				</div>
+
+				<div class="flex justify-between">
+					<button type="button"
+						class="previous bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Previous</button>
+					<button type="button"
+						class="next bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Next</button>
+				</div>
+			</fieldset>
+
+			<!-- Fieldset 3: Estimates & Status (kept yellow style) -->
+			<fieldset class="hidden bg-yellow-50 p-6 rounded-lg shadow-lg space-y-4">
+				<h2 class="text-xl font-bold text-yellow-800">Estimates &amp; Status</h2>
+
+				<div>
+					<label for="storyPoint" class="block font-medium">Story Point</label>
+					<select name="storyPoint" id="storyPoint" required
+						class="w-full px-3 py-2 border border-gray-300 rounded focus:ring focus:ring-yellow-300">
+						<option value="">Select story point</option>
+						<option value="0.25">0.25</option>
+						<option value="0.5">0.5</option>
+						<option value="0.75">0.75</option>
+						<option value="1">1</option>
+					</select>
+				</div>
+
+				<div>
+					<label for="bugRca" class="block font-medium">Bug RCA</label>
+					<input type="text" name="bugRca" id="bugRca" placeholder="Root cause analysis"
+						class="w-full px-3 py-2 border border-gray-300 rounded focus:ring focus:ring-yellow-300" />
+				</div>
+
+				<div>
+					<label for="effortHours" class="block font-medium">Effort (Hours)</label>
+					<input type="number" name="effortHours" id="effortHours" min="1" max="8" step="1" required
+						placeholder="1 to 8"
+						class="w-full px-3 py-2 border border-gray-300 rounded focus:ring focus:ring-yellow-300" />
+				</div>
+
+				<div>
+					<label for="status" class="block font-medium">Status</label>
+					<select name="status" id="status" required
+						class="w-full px-3 py-2 border border-gray-300 rounded focus:ring focus:ring-yellow-300">
+						<option value="">Select status</option>
+						<option>Open</option>
+						<option>In-Progress</option>
+						<option>Completed</option>
+						<option>On-Hold</option>
+						<option>Others</option>
+					</select>
+				</div>
+
+
+				<div class="flex justify-between">
+					<button type="button"
+						class="previous bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Previous</button>
+					<button type="submit"
+						class="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700">Submit</button>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+
+	<script>
+		const nextButtons = document.querySelectorAll('.next');
+		const prevButtons = document.querySelectorAll('.previous');
+		const fieldsets = document.querySelectorAll('fieldset');
+		const progressbarItems = document.querySelectorAll('#progressbar li');
+
+		let currentStep = 0;
+
+		const validateFieldset = (fieldset) => {
+			const inputs = fieldset.querySelectorAll('input, select, textarea');
+			for (const input of inputs) {
+				if (!input.checkValidity()) {
+					input.reportValidity();
+					return false;
+				}
+			}
+			return true;
+		};
+
+		nextButtons.forEach((button) => {
+			button.addEventListener('click', () => {
+				if (validateFieldset(fieldsets[currentStep])) {
+					fieldsets[currentStep].classList.add('hidden');
+					progressbarItems[currentStep].classList.remove('active');
+					currentStep++;
+					fieldsets[currentStep].classList.remove('hidden');
+					progressbarItems[currentStep].classList.add('active');
+				}
+			});
+		});
+
+		prevButtons.forEach((button) => {
+			button.addEventListener('click', () => {
+				fieldsets[currentStep].classList.add('hidden');
+				progressbarItems[currentStep].classList.remove('active');
+				currentStep--;
+				fieldsets[currentStep].classList.remove('hidden');
+				progressbarItems[currentStep].classList.add('active');
+			});
+		});
+	</script>
+</body>
+
+</html>

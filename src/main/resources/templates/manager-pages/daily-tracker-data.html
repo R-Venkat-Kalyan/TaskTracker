@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Daily Tracker — Logs</title>
+
+	<script src="https://cdn.tailwindcss.com"></script>
+
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+	<link href="assets/img/favicon.png" rel="icon">
+
+	<style>
+		.tooltip {
+			position: relative;
+			display: inline-block;
+		}
+
+		.tooltip::after {
+			content: attr(data-tooltip);
+			position: absolute;
+			bottom: 120%;
+			left: 50%;
+			transform: translateX(-50%);
+			background-color: #333;
+			color: #fff;
+			padding: 5px 10px;
+			border-radius: 5px;
+			white-space: nowrap;
+			font-size: 0.75rem;
+			opacity: 0;
+			transition: opacity .2s;
+			pointer-events: none;
+		}
+
+		.tooltip:hover::after {
+			opacity: 1;
+		}
+
+		.header-controls input[type="month"] {
+			height: 2.1rem;
+			font-size: .875rem;
+		}
+
+		.header-controls button {
+			height: 2.1rem;
+			font-size: .825rem;
+		}
+
+		th,
+		td {
+			white-space: nowrap;
+		}
+
+		td.truncate-cell {
+			max-width: 20rem;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+	</style>
+</head>
+
+<body class="bg-gradient-to-br from-blue-100 to-blue-300 text-gray-900 min-h-screen flex items-center justify-center">
+
+	<div class="max-w-7xl w-full mx-auto py-8 px-4">
+
+		<div class="bg-white shadow-xl rounded-xl overflow-hidden">
+
+			<div class="px-4 sm:px-6 py-4 bg-blue-600 text-white rounded-t-xl flex items-center justify-between">
+
+				<h2 class="text-2xl sm:text-3xl font-bold">
+					<i class="fas fa-list-check"></i>
+					Daily Tracker — Logs
+				</h2>
+
+				<form class="header-controls flex items-center gap-2" th:action="@{/me/view-data}" method="get">
+
+					<input type="month" name="month"
+						th:value="${month != null && !#strings.isEmpty(month) ? month : #temporals.format(#temporals.createNow(), 'yyyy-MM')}"
+						class="rounded-md border border-white/30 bg-white/15 text-white px-2 focus:outline-none focus:ring-2 focus:ring-white/50">
+
+					<button class="px-3 rounded-md bg-white/15 hover:bg-white/25 border border-white/30">
+						Load
+					</button>
+
+					<button type="button" id="btnExport"
+						class="px-3 rounded-md bg-white text-blue-700 hover:bg-gray-100">
+						Export CSV
+					</button>
+
+				</form>
+
+			</div>
+
+			<div class="overflow-x-auto p-4 sm:p-6">
+
+				<table id="logsTable" class="w-full bg-white rounded-lg border border-gray-300">
+
+					<thead>
+
+						<tr class="bg-blue-500 text-white text-sm">
+
+							<th class="py-2 px-3 text-left">Name</th>
+							<th class="py-2 px-3 text-left">Employee ID</th>
+							<th class="py-2 px-3 text-left">Sprint</th>
+							<th class="py-2 px-3 text-left">Release</th>
+							<th class="py-2 px-3 text-left">Date</th>
+							<th class="py-2 px-3 text-left">Program</th>
+							<th class="py-2 px-3 text-left">Jira Type</th>
+							<th class="py-2 px-3 text-left">Priority</th>
+							<th class="py-2 px-3 text-left">User Story ID</th>
+							<th class="py-2 px-3 text-left">Jira ID</th>
+							<th class="py-2 px-3 text-left">Prod Defect</th>
+							<th class="py-2 px-3 text-left">Effort Category</th>
+							<th class="py-2 px-3 text-left">Description</th>
+							<th class="py-2 px-3 text-right">SP</th>
+							<th class="py-2 px-3 text-left">Bug RCA</th>
+							<th class="py-2 px-3 text-right">Hours</th>
+							<th class="py-2 px-3 text-left">Status</th>
+
+						</tr>
+
+					</thead>
+
+					<tbody class="text-sm">
+
+						<tr th:each="log : ${logs}" class="hover:bg-gray-100 transition">
+
+							<td class="py-2 px-3 border" th:text="${log.employeeName}"></td>
+							<td class="py-2 px-3 border" th:text="${log.employeeId}"></td>
+
+							<td class="py-2 px-3 border" th:text="${log.sprint}"></td>
+							<td class="py-2 px-3 border" th:text="${log.release}"></td>
+
+							<td class="py-2 px-3 border" th:text="${log.date}"></td>
+							<td class="py-2 px-3 border" th:text="${log.program}"></td>
+							<td class="py-2 px-3 border" th:text="${log.jiraType}"></td>
+							<td class="py-2 px-3 border" th:text="${log.priority}"></td>
+							<td class="py-2 px-3 border" th:text="${log.userStoryId}"></td>
+							<td class="py-2 px-3 border" th:text="${log.jiraId}"></td>
+
+							<td class="py-2 px-3 border" th:text="${log.productionDefect} ? 'Yes' : 'No'"></td>
+
+							<td class="py-2 px-3 border" th:text="${log.effortCategory}"></td>
+
+							<td class="py-2 px-3 border truncate-cell" th:title="${log.description}"
+								th:text="${log.description}"></td>
+
+							<td class="py-2 px-3 border text-right"
+								th:text="${#numbers.formatDecimal(log.storyPoint,1,2)}"></td>
+
+							<td class="py-2 px-3 border" th:text="${log.bugRca}"></td>
+
+							<td class="py-2 px-3 border text-right" th:text="${log.effortHours}"></td>
+
+							<td class="py-2 px-3 border" th:text="${log.status}"></td>
+
+						</tr>
+
+					</tbody>
+
+					<tfoot>
+
+						<tr class="bg-gray-50 text-sm">
+
+							<td class="py-2 px-3 border-t font-medium" colspan="13">
+								Totals (visible rows)
+							</td>
+
+							<td id="totalSp" class="py-2 px-3 border-t text-right font-semibold"
+								th:text="${#numbers.formatDecimal(totalStoryPoints,1,2)}">
+								0
+							</td>
+
+							<td class="py-2 px-3 border-t"></td>
+
+							<td id="totalHours" class="py-2 px-3 border-t text-right font-semibold"
+								th:text="${totalEffortHours}">
+								0
+							</td>
+
+							<td class="py-2 px-3 border-t"></td>
+
+						</tr>
+
+					</tfoot>
+
+				</table>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<script>
+
+		(function () {
+
+			const tbody = document.querySelector('#logsTable tbody');
+
+			let sp = 0;
+			let hrs = 0;
+
+			if (!tbody) return;
+
+			tbody.querySelectorAll('tr').forEach(tr => {
+
+				const spCell = tr.children[13]?.textContent?.trim();
+				const hCell = tr.children[15]?.textContent?.trim();
+
+				sp += Number(spCell || 0);
+				hrs += Number(hCell || 0);
+
+			});
+
+			document.getElementById('totalSp').textContent = sp.toFixed(2);
+			document.getElementById('totalHours').textContent = hrs;
+
+		})();
+
+		document.getElementById('btnExport')?.addEventListener('click', () => {
+
+			const table = document.getElementById('logsTable');
+			const rows = table.querySelectorAll('thead tr, tbody tr');
+
+			let csv = [];
+
+			rows.forEach(row => {
+
+				const cols = row.querySelectorAll('th, td');
+				const vals = [];
+
+				cols.forEach(c => {
+
+					let t = c.textContent.replace(/\s+/g, ' ').trim();
+
+					if (t.includes(',') || t.includes('"'))
+						t = '"' + t.replace(/"/g, '""') + '"';
+
+					vals.push(t);
+
+				});
+
+				csv.push(vals.join(','));
+
+			});
+
+			const blob = new Blob([csv.join('\n')], {type: 'text/csv;charset=utf-8;'});
+
+			const url = URL.createObjectURL(blob);
+
+			const a = document.createElement('a');
+
+			a.href = url;
+			a.download = `daily-tracker-${new Date().toISOString().slice(0, 10)}.csv`;
+
+			document.body.appendChild(a);
+
+			a.click();
+
+			document.body.removeChild(a);
+
+			URL.revokeObjectURL(url);
+
+		});
+
+		(function () {
+
+			const monthEl = document.querySelector('input[type="month"][name="month"]');
+
+			if (monthEl && !monthEl.value)
+				monthEl.value = new Date().toISOString().slice(0, 7);
+
+		})();
+
+	</script>
+
+</body>
+
+</html>
