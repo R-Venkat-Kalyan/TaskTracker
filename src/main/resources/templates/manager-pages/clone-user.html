@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Clone Employee</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        function confirmSave() {
+
+            const fullName = document.getElementById("fullName").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const empId = document.getElementById("empId").value.trim();
+            const organization = document.getElementById("organization").value.trim();
+            const project = document.getElementById("project").value.trim();
+
+            if (!fullName || !email || !empId || !organization || !project) {
+                alert("Please fill all required fields.");
+                return;
+            }
+
+            if (confirm("Create a new employee using this data?")) {
+                document.getElementById("cloneEmployeeForm").submit();
+            }
+        }
+    </script>
+
+</head>
+
+<body class="bg-gray-100">
+
+<div class="max-w-2xl mx-auto mt-10 bg-white p-8 rounded-lg shadow">
+
+    <h2 class="text-2xl font-bold mb-6 text-gray-700">Clone Employee (Save As New)</h2>
+
+    <form id="cloneEmployeeForm"
+          th:action="@{/manager/save-user}"
+          method="post">
+
+        <!-- Full Name -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Full Name</label>
+
+            <input type="text"
+                   id="fullName"
+                   name="fullName"
+                   th:value="${user.fullName}"
+                   class="mt-2 block w-full p-3 border border-gray-300 rounded-md"
+                   required>
+        </div>
+
+        <!-- Email (Editable) -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Email</label>
+
+            <input type="email"
+                   id="email"
+                   name="email"
+                   th:value="${user.email}"
+                   class="mt-2 block w-full p-3 border border-gray-300 rounded-md"
+                   required>
+        </div>
+
+        <!-- Employee ID (Editable) -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Employee ID</label>
+
+            <input type="text"
+                   id="empId"
+                   name="empId"
+                   th:value="${user.empId}"
+                   class="mt-2 block w-full p-3 border border-gray-300 rounded-md"
+                   required>
+        </div>
+
+        <!-- Organization -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Organization</label>
+
+            <input type="text"
+                   id="organization"
+                   name="organization"
+                   th:value="${user.organisation}"
+                   class="mt-2 block w-full p-3 border border-gray-300 rounded-md"
+                   required>
+        </div>
+
+        <!-- Project -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Project</label>
+
+            <input type="text"
+                   id="project"
+                   name="project"
+                   th:value="${user.project}"
+                   class="mt-2 block w-full p-3 border border-gray-300 rounded-md"
+                   required>
+        </div>
+
+        <!-- Role (Text Only) -->
+        <div class="mb-4">
+
+            <label class="block text-sm font-medium text-gray-700">Role</label>
+
+            <input type="text"
+                   th:value="${user.role}"
+                   readonly
+                   class="mt-2 block w-full p-3 border border-gray-300 bg-gray-100 text-gray-600 rounded-md cursor-not-allowed">
+
+            <input type="hidden" name="role" th:value="${user.role}">
+        </div>
+
+        <!-- Password -->
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700">Password</label>
+
+            <input type="password"
+                   name="password"
+                   placeholder="Enter password for new employee"
+                   class="mt-2 block w-full p-3 border border-gray-300 rounded-md"
+                   required>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex justify-between">
+
+            <a th:href="@{/manager/dashboard}"
+               class="px-5 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                Cancel
+            </a>
+
+            <button type="button"
+                    onclick="confirmSave()"
+                    class="px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                Save As New Employee
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>
