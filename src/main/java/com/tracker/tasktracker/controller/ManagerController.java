@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -40,9 +41,24 @@ public class ManagerController {
     private final UserService userService;
 
     @PostMapping("/save-user")
-    public String saveUser(@ModelAttribute UserEntity user){
+    public String saveUser(@ModelAttribute UserEntity user,
+                           RedirectAttributes redirectAttributes){
+
+        boolean exists = userService.userExists(user.getEmail(), user.getEmpId());
+
+        if(exists){
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "User with same Email or Employee ID already exists!");
+
+            return "redirect:/manager/add-user";
+        }
+
         userService.saveUser(user);
-        return "redirect:/manager/dashboard";
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                "User created successfully!");
+
+        return "redirect:/manager/view-users";
     }
 
     @GetMapping("/view-users")
@@ -89,6 +105,12 @@ public class ManagerController {
         model.addAttribute("user", user);
 
         return "manager-pages/clone-user";
+    }
+
+    @GetMapping("/delete-user/{id}")
+    public String deleteUser(@PathVariable String id){
+        userService.deleteUserById(id);
+        return "redirect:/manager/view-users";
     }
 
 }

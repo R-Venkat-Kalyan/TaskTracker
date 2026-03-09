@@ -43,6 +43,16 @@
             white-space: nowrap;
         }
     </style>
+
+    <th:block th:if="${successMessage}">
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            window.onload = function () {
+                alert(/*[[${successMessage}]]*/ '');
+            };
+            /*]]>*/
+        </script>
+    </th:block>
 </head>
 
 <body class="bg-gradient-to-br from-blue-100 to-blue-300 text-gray-900 min-h-screen flex items-center justify-center">
@@ -53,12 +63,12 @@
         <!-- Header -->
         <div class="px-4 sm:px-6 py-4 bg-blue-600 text-white rounded-t-xl flex items-center justify-between">
             <h2 class="text-2xl sm:text-3xl font-bold">
-                <i class="fas fa-users"></i> View Employees
+                <i class="fas fa-users"></i> View Users
             </h2>
 
             <a href="/manager/add-user"
                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-white text-blue-700 hover:bg-gray-100 border border-white/30">
-                <i class="fa fa-plus"></i> Add Employee
+                <i class="fa fa-plus"></i> Add User
             </a>
         </div>
 
@@ -105,10 +115,10 @@
 
 
                         <!-- Delete -->
-                        <a th:href="@{'/manager/delete-employee/' + ${emp.id}}"
+                        <a th:href="@{'/manager/delete-user/' + ${emp.id}}"
                            class="text-red-600 tooltip mx-2 hover:text-red-800 transition"
                            data-tooltip="Delete"
-                           onclick="return confirm('Delete this employee?');">
+                           onclick="return confirm('Delete this user?');">
                             <i class="fas fa-trash-alt text-lg"></i>
                         </a>
                     </td>

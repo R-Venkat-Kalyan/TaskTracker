@@ -25,4 +25,14 @@ public class UserService {
     public UserEntity findUserById(String id){
         return  userRepository.findById(id).orElse(null);
     }
+
+    public void deleteUserById(String id){
+        userRepository.deleteById(id);
+    }
+
+    public boolean userExists(String email, String empId){
+
+        return userRepository.existsByEmail(email) ||
+                userRepository.existsByEmpId(empId);
+    }
 }

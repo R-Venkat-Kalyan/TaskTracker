@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Clone Employee</title>
+    <title>Clone User</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -11,10 +11,10 @@
             const fullName = document.getElementById("fullName").value.trim();
             const email = document.getElementById("email").value.trim();
             const empId = document.getElementById("empId").value.trim();
-            const organization = document.getElementById("organization").value.trim();
+            const organisation = document.getElementById("organisation").value.trim();
             const project = document.getElementById("project").value.trim();
 
-            if (!fullName || !email || !empId || !organization || !project) {
+            if (!fullName || !email || !empId || !organisation || !project) {
                 alert("Please fill all required fields.");
                 return;
             }
@@ -31,7 +31,7 @@
 
 <div class="max-w-2xl mx-auto mt-10 bg-white p-8 rounded-lg shadow">
 
-    <h2 class="text-2xl font-bold mb-6 text-gray-700">Clone Employee (Save As New)</h2>
+    <h2 class="text-2xl font-bold mb-6 text-gray-700">Clone User (Save As New)</h2>
 
     <form id="cloneEmployeeForm"
           th:action="@{/manager/save-user}"
@@ -73,13 +73,13 @@
                    required>
         </div>
 
-        <!-- Organization -->
+        <!-- Organisation -->
         <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700">Organization</label>
+            <label class="block text-sm font-medium text-gray-700">Organisation</label>
 
             <input type="text"
-                   id="organization"
-                   name="organization"
+                   id="organisation"
+                   name="organisation"
                    th:value="${user.organisation}"
                    class="mt-2 block w-full p-3 border border-gray-300 rounded-md"
                    required>
@@ -132,7 +132,7 @@
             <button type="button"
                     onclick="confirmSave()"
                     class="px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                Save As New Employee
+                Save As New User
             </button>
 
         </div>
