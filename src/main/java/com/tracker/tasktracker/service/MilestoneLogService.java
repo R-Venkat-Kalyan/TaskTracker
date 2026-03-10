@@ -5,6 +5,7 @@ import com.tracker.tasktracker.repository.MilestoneLogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -19,5 +20,17 @@ public class MilestoneLogService {
 
     public List<MilestoneLogEntity> findByUserId(String userId){
         return milestoneLogRepository.findByUserId(userId);
+    }
+
+    public List<MilestoneLogEntity> getLogsForMonth(String userId, LocalDate start, LocalDate end) {
+        return milestoneLogRepository.findByUserIdAndDateBetween(userId, start, end);
+    }
+
+    public MilestoneLogEntity getById(String id) {
+        return milestoneLogRepository.findById(id).orElseThrow();
+    }
+
+    public void deleteLog(String id) {
+        milestoneLogRepository.deleteById(id);
     }
 }

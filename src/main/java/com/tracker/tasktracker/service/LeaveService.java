@@ -5,6 +5,7 @@ import com.tracker.tasktracker.repository.LeaveRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -23,5 +24,13 @@ public class LeaveService {
 
     public List<LeaveEntity> getAllLeaves() {
         return leaveRepository.findAll();
+    }
+
+    public List<LeaveEntity> getLeavesForMonth(String userId, LocalDate start, LocalDate end) {
+        return leaveRepository.findByUserIdAndStartDateBetween(userId, start, end);
+    }
+
+    public void deleteLeave(String id) {
+        leaveRepository.deleteById(id);
     }
 }

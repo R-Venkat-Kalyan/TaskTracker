@@ -78,10 +78,10 @@
 					Daily Tracker — Logs
 				</h2>
 
-				<form class="header-controls flex items-center gap-2" th:action="@{/me/view-data}" method="get">
+				<form class="header-controls flex items-center gap-2" th:action="@{/employee/milestone-tracker}" method="get">
 
 					<input type="month" name="month"
-						th:value="${month != null && !#strings.isEmpty(month) ? month : #temporals.format(#temporals.createNow(), 'yyyy-MM')}"
+						th:value="${month}"
 						class="rounded-md border border-white/30 bg-white/15 text-white px-2 focus:outline-none focus:ring-2 focus:ring-white/50">
 
 					<button class="px-3 rounded-md bg-white/15 hover:bg-white/25 border border-white/30">
@@ -200,19 +200,19 @@
 
 							<td class="py-2 px-3 border border-gray-200 text-center">
 
-								<a th:href="@{'/me/add-data'(duplicate=${log.id})}"
+								<a th:href="@{/employee/save-as/{id}(id=${log.id})}"
 									class="text-blue-600 tooltip mx-2 hover:text-blue-800 transition"
 									data-tooltip="Duplicate">
 									<i class="fas fa-clone text-lg"></i>
 								</a>
 
-								<a th:href="@{'/me/edit-data/' + ${log.id}}"
+								<a th:href="@{/employee/edit-log/{id}(id=${log.id})}"
 									class="text-green-600 tooltip mx-2 hover:text-green-800 transition"
 									data-tooltip="Edit">
 									<i class="fas fa-edit text-lg"></i>
 								</a>
 
-								<a th:href="@{'/me/delete-data/' + ${log.id}}"
+								<a th:href="@{'/employee/delete-data/' + ${log.id}}"
 									class="text-red-600 tooltip mx-2 hover:text-red-800 transition"
 									data-tooltip="Delete" onclick="return confirm('Delete this log?');">
 									<i class="fas fa-trash-alt text-lg"></i>
