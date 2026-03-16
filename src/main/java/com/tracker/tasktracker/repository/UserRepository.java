@@ -3,6 +3,8 @@ package com.tracker.tasktracker.repository;
 import com.tracker.tasktracker.entity.UserEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -15,4 +17,8 @@ public interface UserRepository extends MongoRepository<UserEntity, String> {
     boolean existsByEmail(String email);
 
     boolean existsByEmpId(String empId);
+
+    long countByRoleIgnoreCase(String role);
+
+    List<UserEntity> findByRoleIgnoreCase(String role);
 }

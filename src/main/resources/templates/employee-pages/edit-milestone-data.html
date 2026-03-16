@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Work Log — Entry Wizard</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+
+    #progressbar li {
+      border: 2px solid transparent;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+    }
+
+    #progressbar li.active {
+      border-color: #4c51bf;
+      color: #4c51bf;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+
+<body class="bg-white text-gray-800">
+
+<div class="pt-20 max-w-3xl mx-auto p-6">
+
+  <form id="msform"
+        method="post"
+        action="/employee/update-milestone"
+        autocomplete="on">
+
+    <!-- Hidden ID for edit -->
+    <input type="hidden" name="id" th:value="${log?.id}">
+
+    <!-- Progressbar -->
+
+    <ul id="progressbar" class="flex justify-between space-x-4 mb-6">
+
+      <li class="w-1/4 text-center py-2 active">Work Basics</li>
+      <li class="w-1/4 text-center py-2">Jira & Classification</li>
+      <li class="w-1/4 text-center py-2">Estimates & Status</li>
+
+    </ul>
+
+
+    <!-- FIELDSET 1 -->
+
+    <fieldset class="bg-blue-50 p-6 rounded-lg shadow-lg space-y-4">
+
+      <h2 class="text-xl font-bold text-blue-800">Work Basics</h2>
+
+      <div>
+        <label class="block font-medium">Sprint</label>
+
+        <input type="text"
+               name="sprint"
+               id="sprint"
+               th:value="${log?.sprint}"
+               required
+               class="w-full px-3 py-2 border border-gray-300 rounded">
+      </div>
+
+
+      <div>
+        <label class="block font-medium">Release</label>
+
+        <input type="text"
+               name="release"
+               id="release"
+               th:value="${log?.release}"
+               required
+               class="w-full px-3 py-2 border border-gray-300 rounded">
+      </div>
+
+
+      <div>
+        <label class="block font-medium">Date</label>
+
+        <input type="date"
+               name="date"
+               id="date"
+               th:value="${log?.date}"
+               required
+               class="w-full px-3 py-2 border border-gray-300 rounded">
+      </div>
+
+
+      <div>
+        <label class="block font-medium">Program</label>
+
+        <input type="text"
+               name="program"
+               id="program"
+               th:value="${log?.program}"
+               required
+               class="w-full px-3 py-2 border border-gray-300 rounded">
+      </div>
+
+
+      <div class="flex justify-end">
+
+        <button type="button"
+                class="next bg-blue-600 text-white px-4 py-2 rounded">
+          Next
+        </button>
+
+      </div>
+
+    </fieldset>
+
+
+    <!-- FIELDSET 2 -->
+
+    <fieldset class="hidden bg-green-50 p-6 rounded-lg shadow-lg space-y-4">
+
+      <h2 class="text-xl font-bold text-green-800">Jira & Classification</h2>
+
+
+      <div>
+        <label class="block font-medium">Jira Type</label>
+
+        <select name="jiraType" required
+                class="w-full px-3 py-2 border border-gray-300 rounded">
+
+          <option value="">Select type</option>
+
+          <option th:selected="${log?.jiraType=='User Story'}">User Story</option>
+          <option th:selected="${log?.jiraType=='Defect'}">Defect</option>
+          <option th:selected="${log?.jiraType=='Adhoc Task'}">Adhoc Task</option>
+          <option th:selected="${log?.jiraType=='Spike Story'}">Spike Story</option>
+          <option th:selected="${log?.jiraType=='Tech Enabler'}">Tech Enabler</option>
+          <option th:selected="${log?.jiraType=='Design Review'}">Design Review</option>
+          <option th:selected="${log?.jiraType=='Others'}">Others</option>
+
+        </select>
+
+      </div>
+
+
+      <div>
+        <label class="block font-medium">Priority</label>
+
+        <select name="priority" required
+                class="w-full px-3 py-2 border border-gray-300 rounded">
+
+          <option value="">Select priority</option>
+
+          <option th:selected="${log?.priority=='Low'}">Low</option>
+          <option th:selected="${log?.priority=='Moderate'}">Moderate</option>
+          <option th:selected="${log?.priority=='High'}">High</option>
+          <option th:selected="${log?.priority=='Critical'}">Critical</option>
+          <option th:selected="${log?.priority=='Blocker'}">Blocker</option>
+
+        </select>
+
+      </div>
+
+
+      <div>
+        <label class="block font-medium">User Story ID</label>
+
+        <input type="text"
+               name="userStoryId"
+               th:value="${log?.userStoryId}"
+               class="w-full px-3 py-2 border border-gray-300 rounded">
+      </div>
+
+
+      <div>
+        <label class="block font-medium">Jira ID</label>
+
+        <input type="text"
+               name="jiraId"
+               th:value="${log?.jiraId}"
+               class="w-full px-3 py-2 border border-gray-300 rounded">
+      </div>
+
+
+      <div>
+        <label class="block font-medium">Production Defect</label>
+
+        <select name="productionDefect"
+                class="w-full px-3 py-2 border border-gray-300 rounded">
+
+          <option value="">Select</option>
+
+          <option value="true"
+                  th:selected="${log?.productionDefect==true}">
+            Yes
+          </option>
+
+          <option value="false"
+                  th:selected="${log?.productionDefect==false}">
+            No
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div>
+        <label class="block font-medium">Effort Category</label>
+
+        <select name="effortCategory"
+                class="w-full px-3 py-2 border border-gray-300 rounded">
+
+          <option value="">Select</option>
+
+          <option th:selected="${log?.effortCategory=='Analysis'}">Analysis</option>
+          <option th:selected="${log?.effortCategory=='Development'}">Development</option>
+          <option th:selected="${log?.effortCategory=='Discussion'}">Discussion</option>
+          <option th:selected="${log?.effortCategory=='Testing'}">Testing</option>
+          <option th:selected="${log?.effortCategory=='Support'}">Support</option>
+          <option th:selected="${log?.effortCategory=='Others'}">Others</option>
+
+        </select>
+
+      </div>
+
+
+      <div>
+        <label class="block font-medium">Description</label>
+
+        <textarea name="description"
+                  rows="3"
+                  th:text="${log?.description}"
+                  class="w-full px-3 py-2 border border-gray-300 rounded"></textarea>
+
+      </div>
+
+
+      <div class="flex justify-between">
+
+        <button type="button"
+                class="previous bg-gray-600 text-white px-4 py-2 rounded">
+          Previous
+        </button>
+
+        <button type="button"
+                class="next bg-green-600 text-white px-4 py-2 rounded">
+          Next
+        </button>
+
+      </div>
+
+    </fieldset>
+
+
+    <!-- FIELDSET 3 -->
+
+    <fieldset class="hidden bg-yellow-50 p-6 rounded-lg shadow-lg space-y-4">
+
+      <h2 class="text-xl font-bold text-yellow-800">Estimates & Status</h2>
+
+
+      <div>
+        <label class="block font-medium">Story Point</label>
+
+        <select name="storyPoint"
+                class="w-full px-3 py-2 border border-gray-300 rounded">
+
+          <option value="">Select</option>
+
+          <option value="0.25" th:selected="${log?.storyPoint==0.25}">0.25</option>
+          <option value="0.5" th:selected="${log?.storyPoint==0.5}">0.5</option>
+          <option value="0.75" th:selected="${log?.storyPoint==0.75}">0.75</option>
+          <option value="1" th:selected="${log?.storyPoint==1}">1</option>
+
+        </select>
+
+      </div>
+
+
+      <div>
+        <label class="block font-medium">Bug RCA</label>
+
+        <input type="text"
+               name="bugRca"
+               th:value="${log?.bugRca}"
+               class="w-full px-3 py-2 border border-gray-300 rounded">
+      </div>
+
+
+      <div>
+        <label class="block font-medium">Effort (Hours)</label>
+
+        <input type="number"
+               name="effortHours"
+               min="1"
+               max="8"
+               step="1"
+               th:value="${log?.effortHours}"
+               class="w-full px-3 py-2 border border-gray-300 rounded">
+      </div>
+
+
+      <div>
+        <label class="block font-medium">Status</label>
+
+        <select name="status"
+                class="w-full px-3 py-2 border border-gray-300 rounded">
+
+          <option value="">Select</option>
+
+          <option th:selected="${log?.status=='Open'}">Open</option>
+          <option th:selected="${log?.status=='In-Progress'}">In-Progress</option>
+          <option th:selected="${log?.status=='Completed'}">Completed</option>
+          <option th:selected="${log?.status=='On-Hold'}">On-Hold</option>
+          <option th:selected="${log?.status=='Others'}">Others</option>
+
+        </select>
+
+      </div>
+
+
+      <div class="flex justify-between">
+
+        <button type="button"
+                class="previous bg-gray-600 text-white px-4 py-2 rounded">
+          Previous
+        </button>
+
+        <button type="submit"
+                class="bg-yellow-600 text-white px-4 py-2 rounded">
+          Submit
+        </button>
+
+      </div>
+
+    </fieldset>
+
+  </form>
+
+</div>
+
+<!-- your wizard JS unchanged -->
+
+<script>
+
+  const nextButtons = document.querySelectorAll('.next');
+  const prevButtons = document.querySelectorAll('.previous');
+  const fieldsets = document.querySelectorAll('fieldset');
+  const progressbarItems = document.querySelectorAll('#progressbar li');
+
+  let currentStep = 0;
+
+  nextButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      fieldsets[currentStep].classList.add('hidden');
+      progressbarItems[currentStep].classList.remove('active');
+      currentStep++;
+      fieldsets[currentStep].classList.remove('hidden');
+      progressbarItems[currentStep].classList.add('active');
+    });
+  });
+
+  prevButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      fieldsets[currentStep].classList.add('hidden');
+      progressbarItems[currentStep].classList.remove('active');
+      currentStep--;
+      fieldsets[currentStep].classList.remove('hidden');
+      progressbarItems[currentStep].classList.add('active');
+    });
+  });
+
+</script>
+
+</body>
+</html>

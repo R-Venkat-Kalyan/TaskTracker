@@ -44,9 +44,9 @@
         </h2>
 
         <!-- Month filter (defaults to current month) -->
-        <form th:action="@{/me/holidays}" method="get" class="header-controls flex items-center gap-2">
+        <form th:action="@{/manager/leave-tracker}" method="get" class="header-controls flex items-center gap-2">
           <input type="month" name="month"
-                 th:value="${month != null && !#strings.isEmpty(month) ? month : #temporals.format(#temporals.createNow(), 'yyyy-MM')}"
+                 th:value="${month}"
                  class="rounded-md border border-white/30 bg-white/15 text-white px-2
                         focus:outline-none focus:ring-2 focus:ring-white/50">
           <button class="px-3 rounded-md bg-white/15 hover:bg-white/25 border border-white/30">Load</button>
@@ -79,10 +79,10 @@
               
               <!-- ✅ New cells -->
               <td class="py-1.5 px-2 border border-gray-500 border-r whitespace-nowrap"
-                  th:text="${lv.employeeName}">John Doe</td>
+                  th:text="${lv.empName}">John Doe</td>
 
               <td class="py-1.5 px-2 border border-gray-500 border-r whitespace-nowrap"
-                  th:text="${lv.employeeId}">EMP-001</td>
+                  th:text="${lv.empId}">EMP-001</td>
 
               <td class="py-1.5 px-2 border border-gray-500 border-r whitespace-nowrap"
                   th:text="${lv.startDate}">2026-04-10</td>
@@ -94,7 +94,7 @@
                   th:text="${lv.totalDays}">3</td>
 
               <td class="py-1.5 px-2 border border-gray-500 border-r whitespace-nowrap">
-                <span th:text="${lv.type}">Planned</span>
+                <span th:text="${lv.leaveType}">Planned</span>
               </td>
 
               <!-- ❌ ACTIONS cells removed -->

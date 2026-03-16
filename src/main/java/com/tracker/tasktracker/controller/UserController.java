@@ -29,10 +29,6 @@ public class UserController {
 		return "/login-form";
 	}
 
-//	@PostMapping("/user")
-//	public String dashBoard(){
-//		return "/employee-pages/dashboard";
-//	}
 
 	@PostMapping("/user")
 	public String userPanel(HttpServletRequest request, RedirectAttributes redirectAttributes, Model model,
@@ -64,8 +60,11 @@ public class UserController {
 		return "redirect:/sign-in";
 	}
 
-
-
+	@PostMapping("/sign-out")
+	public String signOut(HttpSession session){
+		session.invalidate();
+		return "redirect:/";
+	}
 
 
 }

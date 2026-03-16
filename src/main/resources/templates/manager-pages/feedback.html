@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskTracker • Feedback</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="assets/img/favicon.png" rel="icon" />
+
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<!-- Container -->
+<div class="flex justify-center items-center min-h-screen p-4 bg-gray-100">
+  <div class="w-full max-w-lg bg-white rounded-2xl shadow-xl p-6 relative overflow-hidden">
+
+    <!-- Header -->
+    <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">
+      We Value Your Feedback!
+    </h2>
+
+    <p class="text-sm text-gray-600 text-center mb-6">
+      Help us improve <span class="font-semibold">TaskTracker</span> and deliver a better experience.
+    </p>
+
+    <!-- ⭐ Immediate Help Section -->
+    <div class="mb-6 bg-gradient-to-r from-blue-50 to-green-50 border border-blue-200 rounded-xl p-4 shadow-sm">
+      <h3 class="text-lg font-semibold text-gray-800 mb-2 flex items-center gap-2">
+        <i data-lucide="info" class="w-5 h-5 text-blue-600"></i>
+        Need Immediate Response?
+      </h3>
+
+      <p class="text-gray-700 text-sm mb-3">
+        If your issue needs urgent attention or instant updates:
+      </p>
+
+      <div class="space-y-2 pl-2">
+
+        <p class="flex items-center gap-2 text-gray-800">
+          <i data-lucide="mail" class="w-5 h-5 text-blue-600"></i>
+          <span>Email us at:
+                            <a href="mailto:reddy.venkat.kalyan04@gmail.com"
+                               class="font-semibold text-blue-600 hover:underline">
+                                reddy.venkat.kalyan04@gmail.com
+                            </a>
+                        </span>
+        </p>
+
+        <p class="flex items-center gap-2 text-gray-800">
+          <i data-lucide="phone" class="w-5 h-5 text-green-600"></i>
+          <span>Call us at:
+                            <span class="font-semibold">+91 9776365777</span>
+                        </span>
+        </p>
+
+      </div>
+    </div>
+
+    <!-- Feedback Form -->
+    <form action="/manager/submit-feedback" method="POST" class="space-y-4">
+
+      <!-- Feedback Type -->
+      <div>
+        <label for="feedbackType" class="block text-sm font-medium text-gray-700">
+          Feedback Type
+        </label>
+        <select id="feedbackType" name="feedbackType" required
+                class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+          <option value="" disabled selected>Select feedback type</option>
+          <option value="suggestion">Suggestion</option>
+          <option value="issue">Issue / Bug</option>
+          <option value="ui">UI / UX Feedback</option>
+          <option value="feature">Feature Request</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <!-- Message -->
+      <div>
+        <label for="message" class="block text-sm font-medium text-gray-700">
+          Your Feedback
+        </label>
+        <textarea id="message" name="message" rows="4" placeholder="Share your feedback..."
+                  class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                  required></textarea>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="text-center">
+        <button type="submit"
+                class="w-full bg-gradient-to-r from-blue-500 to-green-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg hover:from-blue-600 hover:to-green-600 transition-transform transform hover:scale-105">
+          Submit Feedback
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+</script>
+
+</body>
+
+</html>

@@ -35,4 +35,13 @@ public class UserService {
         return userRepository.existsByEmail(email) ||
                 userRepository.existsByEmpId(empId);
     }
+
+    public long countByRoleIgnoreCase(String role){
+        return userRepository.countByRoleIgnoreCase(role);
+    }
+
+    public List<UserEntity> findEmployees() {
+        return userRepository.findByRoleIgnoreCase("employee");
+    }
+
 }

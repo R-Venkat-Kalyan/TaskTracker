@@ -12,10 +12,20 @@ public interface LeaveRepository extends MongoRepository<LeaveEntity, String> {
 
     List<LeaveEntity> findByUserId(String userId);
 
-    List<LeaveEntity> findByUserIdAndStartDateBetween(
+    List<LeaveEntity> findByUserIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByStartDateAsc(
             String userId,
-            LocalDate start,
-            LocalDate end
+            LocalDate end,
+            LocalDate start
     );
+
+    boolean existsByUserIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
+            String userId,
+            LocalDate end,      // <= endOfNew
+            LocalDate start     // >= startOfNew
+    );
+
+    List<LeaveEntity> findByStartDateBetweenOrderByEmpName(LocalDate start, LocalDate end);
+
+
 
 }

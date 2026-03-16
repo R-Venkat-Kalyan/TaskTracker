@@ -30,6 +30,15 @@
     .header-controls input[type="month"] { height: 2rem; font-size: .85rem; }
     .header-controls button { height: 2rem; font-size: .82rem; }
   </style>
+  <th:block th:if="${successMessage}">
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+      window.onload = function () {
+        alert(/*[[${successMessage}]]*/ '');
+      };
+      /*]]>*/
+    </script>
+  </th:block>
 </head>
 
 <body class="bg-gradient-to-br from-blue-100 to-blue-300 text-gray-900 min-h-screen flex items-center justify-center">

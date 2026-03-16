@@ -14,7 +14,7 @@
   <div class="flex justify-center items-center min-h-screen px-4 sm:px-6 lg:px-8 mt-12">
     <!-- Card -->
     <div class="w-full max-w-lg bg-white shadow-lg rounded-lg p-6 space-y-4">
-      
+
       <!-- Header -->
       <div class="text-center">
         <h1 class="text-3xl text-blue-600 font-semibold">Apply / Mark Leave</h1>
@@ -63,6 +63,7 @@
             <option value="sick">Sick Leave</option>
             <option value="planned">Planned Leave</option>
             <option value="emergency">Emergency Leave</option>
+            <option value="emergency">Regional Holiday</option>
           </select>
           <div id="leaveTypeError" class="text-red-500 text-sm mt-1"></div>
         </div>
@@ -102,28 +103,43 @@
       const startErr = document.getElementById('startDateError');
       const endErr   = document.getElementById('endDateError');
 
-      // Helper: format YYYY-MM-DD
-      const fmt = (d) => {
-        const y = d.getFullYear();
-        const m = String(d.getMonth() + 1).padStart(2, '0');
-        const dd = String(d.getDate()).padStart(2, '0');
+      // Parse 'YYYY-MM-DD' to a UTC Date at midnight (no timezone confusion)
+      function parseDateOnly(dateStr) {
+        // Expect: "YYYY-MM-DD"
+        const [y, m, d] = dateStr.split('-').map(Number);
+        return new Date(Date.UTC(y, m - 1, d)); // UTC midnight
+      }
+
+      // Format helper YYYY-MM-DD (UTC-safe)
+      function fmtUTC(d) {
+        const y = d.getUTCFullYear();
+        const m = String(d.getUTCMonth() + 1).padStart(2, '0');
+        const dd = String(d.getUTCDate()).padStart(2, '0');
         return `${y}-${m}-${dd}`;
-      };
+      }
 
-      // --- Window: Next two months ---
-      // Example: Today Mar 5 -> window = Apr 1 to May 31
+      // --- Window: Next two months (computed in local time, but only used as strings in <input>) ---
       const today = new Date();
-      const firstOfNext = new Date(today.getFullYear(), today.getMonth() + 1, 1);      // next month start
-      const firstOfMonthAfterNext = new Date(today.getFullYear(), today.getMonth() + 2, 1);
-      const firstOfFollowingAfter = new Date(today.getFullYear(), today.getMonth() + 3, 1);
-      const lastOfMonthAfterNext  = new Date(firstOfFollowingAfter - 1);               // end of month after next
+      const firstOfNext            = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+      const firstOfMonthAfterNext  = new Date(today.getFullYear(), today.getMonth() + 2, 1);
+      const firstOfFollowingAfter  = new Date(today.getFullYear(), today.getMonth() + 3, 1);
+      const lastOfMonthAfterNext   = new Date(firstOfFollowingAfter - 1);
 
-      const minStart = fmt(firstOfNext);
-      const maxEnd   = fmt(lastOfMonthAfterNext);
+      const minStart = [
+        firstOfNext.getFullYear(),
+        String(firstOfNext.getMonth() + 1).padStart(2, '0'),
+        String(firstOfNext.getDate()).padStart(2, '0')
+      ].join('-');
+
+      const maxEnd = [
+        lastOfMonthAfterNext.getFullYear(),
+        String(lastOfMonthAfterNext.getMonth() + 1).padStart(2, '0'),
+        String(lastOfMonthAfterNext.getDate()).padStart(2, '0')
+      ].join('-');
 
       // Apply bounds
       startEl.min = minStart;
-      startEl.max = maxEnd;       // start can be anywhere within the two-month window
+      startEl.max = maxEnd;
       endEl.min   = minStart;
       endEl.max   = maxEnd;
 
@@ -132,8 +148,8 @@
 
         if (!startEl.value || !endEl.value) return;
 
-        const start = new Date(startEl.value + 'T00:00:00');
-        const end = new Date(endEl.value + 'T00:00:00');
+        const start = parseDateOnly(startEl.value);
+        const end   = parseDateOnly(endEl.value);
 
         if (end < start) {
           endErr.textContent = 'End date cannot be before start date.';
@@ -143,21 +159,18 @@
         }
 
         let count = 0;
-        let current = new Date(start);
+        // Iterate in UTC space to avoid tz shifts
+        const current = new Date(start.getTime());
 
-        while (current <= end) {
+        while (current.getTime() <= end.getTime()) {
+          const day = current.getUTCDay(); // 0=Sun, 6=Sat
+          if (day !== 0 && day !== 6) count++;
 
-          const day = current.getDay();
-
-          // Skip Saturday (6) and Sunday (0)
-          if (day !== 0 && day !== 6) {
-            count++;
-          }
-
-          current.setDate(current.getDate() + 1);
+          // Add one UTC day
+          current.setUTCDate(current.getUTCDate() + 1);
         }
 
-        daysEl.value = count;
+        daysEl.value = String(count);
       }
 
       // When start changes: update constraints & recalc
@@ -169,10 +182,11 @@
         if (startEl.value < minStart || startEl.value > maxEnd) {
           startErr.textContent = `Please choose a start date between ${minStart} and ${maxEnd}.`;
           startEl.value = '';
+          daysEl.value = '';
           return;
         }
 
-        // End must be >= start, but still within the two-month window
+        // End must be >= start, but still within window
         endEl.min = startEl.value;
         if (endEl.value && endEl.value < startEl.value) {
           endEl.value = startEl.value;
@@ -180,11 +194,13 @@
         calcDays();
       });
 
+      // When end changes: recalc
       endEl.addEventListener('change', () => {
         if (!endEl.value) return;
 
         if (startEl.value && endEl.value < startEl.value) {
           endErr.textContent = 'End date cannot be before start date.';
+          daysEl.value = '';
           return;
         }
         if (endEl.value > maxEnd) {
@@ -196,7 +212,7 @@
         calcDays();
       });
 
-      // Validate on submit
+      // Validate on submit (same as yours, but doesn’t change calc)
       const form = document.getElementById('leaveForm');
       form.addEventListener('submit', (e) => {
         startErr.textContent = '';
@@ -229,6 +245,11 @@
           return;
         }
       });
+
+      // Optional: auto-calc if page loads with values (e.g., edit mode)
+      if (startEl.value && endEl.value) {
+        calcDays();
+      }
     })();
   </script>
 </body>

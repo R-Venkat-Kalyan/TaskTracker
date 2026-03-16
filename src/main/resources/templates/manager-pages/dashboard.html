@@ -24,6 +24,16 @@
     }
   </style>
 
+  <th:block th:if="${successMessage}">
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+      window.onload = function () {
+        alert(/*[[${successMessage}]]*/ '');
+      };
+      /*]]>*/
+    </script>
+  </th:block>
+
 </head>
 
 <body class="flex flex-col w-screen h-screen bg-white">
@@ -37,7 +47,7 @@
       </a>
 
       <div class="flex md:order-2">
-        <form th:action="@{/api/auth/logout}" method="post">
+        <form th:action="@{/sign-out}" method="post">
           <button type="submit"
                   class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 
                          focus:outline-none focus:ring-blue-300 font-medium 
@@ -99,7 +109,7 @@
                       bg-gradient-to-r from-blue-500 to-green-500
                       text-white font-bold shadow-md hover:shadow-xl 
                       transition-transform transform hover:scale-105"
-               href="/feedback">
+               href="/manager/feedback">
               <i class="fa-solid fa-comment w-6 h-6"></i>
               <span class="ml-2 text-sm font-medium">Feedback</span>
               <span class="absolute top-0 right-0 mt-1 mr-1 bg-red-500 text-white 
@@ -117,21 +127,19 @@
     <div class="flex-grow p-6 bg-gray-100">
 
       <!-- Welcome & Month -->
-      <div class="w-full flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      <div class="px-4 sm:px-6 py-4 bg-blue-600 text-white rounded-t-xl flex items-center justify-between">
         <h1 class="text-2xl font-bold text-gray-700">
-          Welcome Manager <span th:text="${name}"></span> !!
+          Welcome Manager <span th:text="${id}"></span> !!
         </h1>
 
-        <form id="monthForm" th:action="@{/manager/dashboard/month}" method="post"
+        <form id="monthForm" th:action="@{/manager/dashboard}" method="post"
               class="flex items-center gap-2">
-          <input type="month" id="monthPicker" name="month"
-                 th:value="${month != null ? month : #temporals.format(#temporals.createNow(), 'yyyy-MM')}"
-                 class="h-9 rounded-md border border-gray-300 px-2 text-sm"
-                 aria-label="Select month"/>
+          <input type="month" name="month"
+                 th:value="${month}"
+                 class="rounded-md border border-white/30 bg-white/15 text-white px-2 focus:outline-none focus:ring-2 focus:ring-white/50" />
 
-          <button type="submit"
-                  class="h-9 px-3 rounded-md bg-gray-900 text-white text-sm hover:bg-gray-800">
-            Go
+          <button class="px-3 rounded-md bg-white/15 hover:bg-white/25 border border-white/30">
+            Load
           </button>
 
           <input type="hidden" name="_csrf" th:value="${_csrf.token}" th:if="${_csrf}"/>
@@ -149,25 +157,27 @@
 
       <!-- Manager Quick Links -->
       <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-        <a href="/manager/storypoints" class="bg-green-500 text-white p-4 rounded-lg shadow hover:bg-green-600">
+        <a href="/manager/leave-tracker" class="bg-green-500 text-white p-4 rounded-lg shadow hover:bg-green-600">
           <i class="fa-solid fa-layer-group mr-2"></i>
-          Total Story Points (Sum)
+          Total Story Points (Sum): <span th:text="${totalStoryPoints}"></span>
         </a>
 
-        <a href="/manager/effort" class="bg-yellow-500 text-white p-4 rounded-lg shadow hover:bg-yellow-600">
+        <a href="/manager/leave-tracker" class="bg-yellow-500 text-white p-4 rounded-lg shadow hover:bg-yellow-600">
           <i class="fa-solid fa-clock mr-2"></i>
-          Total Effort in Hours (Sum)
+          Total Effort in Hours (Sum): <span th:text="${totalEffortHours}"></span>
         </a>
 
-        <a href="/manager/employees" class="bg-purple-500 text-white p-4 rounded-lg shadow hover:bg-purple-600">
+        <a href="/manager/view-users" class="bg-purple-500 text-white p-4 rounded-lg shadow hover:bg-purple-600">
           <i class="fa-solid fa-users mr-2"></i>
-          Total Employees Count
+          Total Employees Count: <span th:text="${employeeCount}"></span>
         </a>
 
-        <a href="/manager/profile" class="bg-blue-500 text-white p-4 rounded-lg shadow hover:bg-blue-600">
-          <i class="fa-solid fa-user-pen mr-2"></i>
-          Update Profile
+        <a th:href="@{/manager/users-summary}"
+           class="bg-blue-500 text-white p-4 rounded-lg shadow hover:bg-blue-600">
+          <i class="fa-solid fa-chart-pie mr-2"></i>
+          View Summary
         </a>
+
       </div>
 
       <!-- Manager Snapshot -->
