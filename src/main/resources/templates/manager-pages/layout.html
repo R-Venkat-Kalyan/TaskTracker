@@ -16,7 +16,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet"/>
 
     <!-- Favicon -->
-    <link href="assets/img/favicon.png" rel="icon"/>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230b0f14%22/><path d=%22M30 30h40v10H30zM30 50h40v10H30zM30 70h25v10H30z%22 fill=%22%2388f572%22/><path d=%22M20 30h5v10h-5zM20 50h5v10h-5zM20 70h5v10h-5z%22 fill=%22%233b82f6%22/></svg>">
 
     <!-- Success Message -->
     <th:block th:if="${successMessage}">
@@ -53,7 +53,7 @@
         <div class="flex md:order-2">
             <form th:action="@{/sign-out}" method="post">
                 <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                    <button type="button"
+                    <button type="submit"
                             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                         Logout
                     </button>

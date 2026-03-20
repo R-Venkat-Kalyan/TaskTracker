@@ -21,12 +21,17 @@ public class UserController {
 
 	@GetMapping("/")
 	public String home() {
-		return "/index";
+		return "index";
 	}
 	
 	@GetMapping("/sign-in")
 	public String signIn() {
-		return "/login-form";
+		return "login-form";
+	}
+
+	@GetMapping("/forgot-password")
+	public String forgotPassword() {
+		return "forgot-password";
 	}
 
 
@@ -63,7 +68,7 @@ public class UserController {
 	@PostMapping("/sign-out")
 	public String signOut(HttpSession session){
 		session.invalidate();
-		return "redirect:/";
+		return "index";
 	}
 
 
