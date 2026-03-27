@@ -106,8 +106,8 @@ public class EmployeeController {
             model.addAttribute("effortHours", effortHours);
             model.addAttribute("workingDays", workingDays);
             model.addAttribute("plannedLeaveDays", plannedLeaves);
-            model.addAttribute("mainContent", "/employee-pages/dashboard");
-            return "/employee-pages/layout";
+            model.addAttribute("mainContent", "employee-pages/dashboard");
+            return "employee-pages/layout";
 
         }
         return "redirect:/sign-out";
@@ -134,8 +134,8 @@ public class EmployeeController {
             List<MilestoneLogEntity> logs = milestoneLogService.getLogsForMonth(user.getId(), start, end);
             model.addAttribute("month", selectedMonth.toString());
             model.addAttribute("logs", logs);
-            model.addAttribute("mainContent", "/employee-pages/milestone-tracker");
-            return "/employee-pages/layout";
+            model.addAttribute("mainContent", "employee-pages/milestone-tracker");
+            return "employee-pages/layout";
         }
         return "redirect:/sign-out";
     }
@@ -144,8 +144,8 @@ public class EmployeeController {
     public String addMileStoneData(Model model, HttpSession session) {
         UserEntity user = (UserEntity) session.getAttribute("user");
         if (user != null) {
-            model.addAttribute("mainContent", "/employee-pages/add-milestone-data");
-            return "/employee-pages/layout";
+            model.addAttribute("mainContent", "employee-pages/add-milestone-data");
+            return "employee-pages/layout";
         }
         return "redirect:/sign-out";
     }
@@ -185,8 +185,8 @@ public class EmployeeController {
 
             model.addAttribute("log", log);
 
-            model.addAttribute("mainContent", "/employee-pages/edit-milestone-data");
-            return "/employee-pages/layout";
+            model.addAttribute("mainContent", "employee-pages/edit-milestone-data");
+            return "employee-pages/layout";
         }
         return "redirect:/sign-out";
     }
@@ -236,8 +236,8 @@ public class EmployeeController {
 
             model.addAttribute("log", log);
 
-            model.addAttribute("mainContent", "/employee-pages/add-milestone-data");
-            return "/employee-pages/layout";
+            model.addAttribute("mainContent", "employee-pages/add-milestone-data");
+            return "employee-pages/layout";
         }
         return "redirect:/sign-out";
     }
@@ -262,8 +262,8 @@ public class EmployeeController {
 
             model.addAttribute("leaves", leaves);
             model.addAttribute("month", selectedMonth.toString());
-            model.addAttribute("mainContent", "/employee-pages/leave-tracker");
-            return "/employee-pages/layout";
+            model.addAttribute("mainContent", "employee-pages/leave-tracker");
+            return "employee-pages/layout";
 
         }
         return "redirect:/sign-out";
@@ -273,8 +273,8 @@ public class EmployeeController {
     public String addLeave(Model model, HttpSession session) {
         UserEntity user = (UserEntity) session.getAttribute("user");
         if (user != null) {
-            model.addAttribute("mainContent", "/employee-pages/add-leave");
-            return "/employee-pages/layout";
+            model.addAttribute("mainContent", "employee-pages/add-leave");
+            return "employee-pages/layout";
         }
         return "redirect:/sign-out";
     }
@@ -325,8 +325,8 @@ public class EmployeeController {
     public String feedback(Model model, HttpSession session) {
         UserEntity user = (UserEntity) session.getAttribute("user");
         if (user != null) {
-            model.addAttribute("mainContent", "/feedback");
-            return "/employee-pages/layout";
+            model.addAttribute("mainContent", "feedback");
+            return "employee-pages/layout";
 
         }
         return "redirect:/sign-out";
@@ -352,8 +352,8 @@ public class EmployeeController {
     public String changePassword(Model model, HttpSession session) {
         UserEntity user = (UserEntity) session.getAttribute("user");
         if (user != null) {
-            model.addAttribute("mainContent", "/employee-pages/update-password");
-            return "/employee-pages/layout";
+            model.addAttribute("mainContent", "employee-pages/update-password");
+            return "employee-pages/layout";
         }
         return "redirect:/sign-out";
     }

@@ -59,8 +59,8 @@ public class ManagerController {
             model.addAttribute("totalPlannedLeaves", leaveService.getTotalPlannedLeaves(month));
 
             model.addAttribute("employeeCount", userService.countByRoleIgnoreCase("employee"));
-            model.addAttribute("mainContent", "/manager-pages/dashboard");
-            return "/manager-pages/layout";
+            model.addAttribute("mainContent", "manager-pages/dashboard");
+            return "manager-pages/layout";
         }
 
         return "redirect:/sign-out";
@@ -84,8 +84,8 @@ public class ManagerController {
             model.addAttribute("month", month);
             model.addAttribute("logs", logs);
 
-            model.addAttribute("mainContent", "/manager-pages/milestone-tracker");
-            return "/manager-pages/layout";
+            model.addAttribute("mainContent", "manager-pages/milestone-tracker");
+            return "manager-pages/layout";
         }
         return "redirect:/sign-out";
     }
@@ -120,8 +120,8 @@ public class ManagerController {
             // FIX: Pass 'safeMonth' instead of 'month' to prevent the NullPointerException
             model.addAttribute("totalPlannedLeaves", leaveService.getTotalPlannedLeaves(safeMonth));
 
-            model.addAttribute("mainContent", "/manager-pages/leave-tracker");
-            return "/manager-pages/layout";
+            model.addAttribute("mainContent", "manager-pages/leave-tracker");
+            return "manager-pages/layout";
         }
         return "redirect:/sign-out";
     }
@@ -130,8 +130,8 @@ public class ManagerController {
     public String addNewEmployee(Model model, HttpSession session) {
         UserEntity user = (UserEntity) session.getAttribute("user");
         if (user != null) {
-            model.addAttribute("mainContent", "/manager-pages/add-user");
-            return "/manager-pages/layout";
+            model.addAttribute("mainContent", "manager-pages/add-user");
+            return "manager-pages/layout";
         }
         return "redirect:/sign-out";
     }
@@ -165,8 +165,8 @@ public class ManagerController {
         if (user != null) {
             List<UserEntity> users = userService.findAllUsers();
             model.addAttribute("employees", users);
-            model.addAttribute("mainContent", "/manager-pages/view-users");
-            return "/manager-pages/layout";
+            model.addAttribute("mainContent", "manager-pages/view-users");
+            return "manager-pages/layout";
         }
         return "redirect:/sign-out";
     }
@@ -178,8 +178,8 @@ public class ManagerController {
         if (sessionUser != null) {
             UserEntity user = userService.findUserById(id);
             model.addAttribute("user", user);
-            model.addAttribute("mainContent", "/manager-pages/edit-user");
-            return "/manager-pages/layout";
+            model.addAttribute("mainContent", "manager-pages/edit-user");
+            return "manager-pages/layout";
         }
         return "redirect:/sign-out";
     }
@@ -302,8 +302,8 @@ public class ManagerController {
             model.addAttribute("teamTotalSP", teamSP);
             model.addAttribute("teamTotalHours", teamHours);
             model.addAttribute("teamTotalLeaveDays", teamLeave);
-            model.addAttribute("mainContent", "/manager-pages/team-summary");
-            return "/manager-pages/layout";
+            model.addAttribute("mainContent", "manager-pages/team-summary");
+            return "manager-pages/layout";
         }
         return "redirect:/sign-out";
     }
@@ -313,8 +313,8 @@ public class ManagerController {
     public String feedback(Model model, HttpSession session) {
         UserEntity user = (UserEntity) session.getAttribute("user");
         if (user != null) {
-            model.addAttribute("mainContent", "/manager-pages/feedback");
-            return "/manager-pages/layout";
+            model.addAttribute("mainContent", "manager-pages/feedback");
+            return "manager-pages/layout";
 
         }
         return "redirect:/sign-out";
